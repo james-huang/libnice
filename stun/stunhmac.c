@@ -90,10 +90,8 @@ static const uint8_t *priv_trim_var (const uint8_t *var, size_t *var_len)
     ptr++;
     (*var_len)--;
   }
-
-  while(*var_len > 0 &&
-      (ptr[*var_len-1] == '"' ||
-      ptr[*var_len-1] == 0)) {
+  while(ptr[*var_len-1] == '"' ||
+      ptr[*var_len-1] == 0) {
     (*var_len)--;
   }
 

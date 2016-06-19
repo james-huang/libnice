@@ -56,7 +56,6 @@ typedef struct
   NiceStream *stream;
   NiceComponent *component;
   TurnServer *turn;
-  gint turn_retries;
   StunAgent stun_agent;
   StunTimer timer;
   uint8_t stun_buffer[STUN_MAX_MESSAGE_SIZE_IPV6];
@@ -154,7 +153,7 @@ discovery_learn_remote_peer_reflexive_candidate (
   NiceAgent *agent,
   NiceStream *stream,
   NiceComponent *component,
-  guint32 priority,
+  guint32 priority, 
   const NiceAddress *remote_address,
   NiceSocket *udp_socket,
   NiceCandidate *local,

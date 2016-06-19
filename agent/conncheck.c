@@ -258,7 +258,7 @@ static gboolean priv_conn_check_initiate (NiceAgent *agent, CandidateCheckPair *
  *
  * See also sect 7.1.2.2.3 (Updating Pair States), and
  * priv_conn_check_unfreeze_related().
- *
+ * 
  * @return TRUE on success, and FALSE if no frozen candidates were found.
  */
 static gboolean priv_conn_check_unfreeze_next (NiceAgent *agent)
@@ -292,10 +292,10 @@ static gboolean priv_conn_check_unfreeze_next (NiceAgent *agent)
       }
     }
 
-    if (pair)
+    if (pair) 
       break;
   }
-
+  
   if (pair) {
     nice_debug ("Agent %p : Pair %p with s/c-id %u/%u (%s) unfrozen.", agent, pair, pair->stream_id, pair->component_id, pair->foundation);
     pair->state = NICE_CHECK_WAITING;
@@ -311,7 +311,7 @@ static gboolean priv_conn_check_unfreeze_next (NiceAgent *agent)
  * check 'success_check' has successfully completed.
  *
  * See sect 7.1.2.2.3 (Updating Pair States) of ICE spec (ID-19).
- *
+ * 
  * @param agent context
  * @param ok_check a connectivity check that has just completed
  *
@@ -330,7 +330,7 @@ static void priv_conn_check_unfreeze_related (NiceAgent *agent, NiceStream *stre
   /* step: perform the step (1) of 'Updating Pair States' */
   for (i = stream->conncheck_list; i ; i = i->next) {
     CandidateCheckPair *p = i->data;
-
+   
     if (p->stream_id == ok_check->stream_id) {
       if (p->state == NICE_CHECK_FROZEN &&
 	  strcmp (p->foundation, ok_check->foundation) == 0) {
@@ -359,7 +359,7 @@ static void priv_conn_check_unfreeze_related (NiceAgent *agent, NiceStream *stre
 	    p->state = NICE_CHECK_WAITING;
             nice_debug ("Agent %p : pair %p state WAITING", agent, p);
 	    ++unfrozen;
-
+					    
 	  }
 	}
       }
@@ -367,9 +367,9 @@ static void priv_conn_check_unfreeze_related (NiceAgent *agent, NiceStream *stre
       if (unfrozen)
 	break;
     }
-  }
+  }    
 
-  if (unfrozen == 0)
+  if (unfrozen == 0) 
     priv_conn_check_unfreeze_next (agent);
 }
 
@@ -395,7 +395,7 @@ candidate_check_pair_fail (NiceStream *stream, NiceAgent *agent, CandidateCheckP
 
 /*
  * Helper function for connectivity check timer callback that
- * runs through the stream specific part of the state machine.
+ * runs through the stream specific part of the state machine. 
  *
  * @param schedule if TRUE, schedule a new check
  *
@@ -497,7 +497,7 @@ static gboolean priv_conn_check_tick_stream (NiceStream *stream, NiceAgent *agen
     /* note: keep the timer going as long as there is work to be done */
   if (s_inprogress)
     keep_timer_going = TRUE;
-
+  
     /* note: if some components have established connectivity,
      *       but yet no nominated pair, keep timer going */
   if (s_nominated < stream->n_components &&
@@ -1157,11 +1157,11 @@ gint conn_check_compare (const CandidateCheckPair *a, const CandidateCheckPair *
 }
 
 /*
- * Preprocesses a new connectivity check by going through list
- * of a any stored early incoming connectivity checks from
+ * Preprocesses a new connectivity check by going through list 
+ * of a any stored early incoming connectivity checks from 
  * the remote peer. If a matching incoming check has been already
  * received, update the state of the new outgoing check 'pair'.
- *
+ * 
  * @param agent context pointer
  * @param stream which stream (of the agent)
  * @param component pointer to component object to which 'pair'has been added
@@ -1208,7 +1208,7 @@ static GSList *prune_cancelled_conn_check (GSList *conncheck_list)
  * remote candidates have been set. This function handles
  * the special case where answerer has sent us connectivity
  * checks before the answer (containing candidate information),
- * reaches us. The special case is documented in sect 7.2
+ * reaches us. The special case is documented in sect 7.2 
  * if ICE spec (ID-19).
  */
 void conn_check_remote_candidates_set(NiceAgent *agent, NiceStream *stream, NiceComponent *component)
@@ -1340,7 +1340,7 @@ void conn_check_remote_candidates_set(NiceAgent *agent, NiceStream *stream, Nice
 
 /*
  * Enforces the upper limit for connectivity checks as described
- * in ICE spec section 5.7.3 (ID-19). See also
+ * in ICE spec section 5.7.3 (ID-19). See also 
  * conn_check_add_for_candidate().
  */
 static void priv_limit_conn_check_list_size (GSList *conncheck_list, guint upper_limit)
@@ -1405,8 +1405,8 @@ static gboolean priv_update_selected_pair (NiceAgent *agent, NiceComponent *comp
 /*
  * Updates the check list state.
  *
- * Implements parts of the algorithm described in
- * ICE sect 8.1.2. "Updating States" (ID-19): if for any
+ * Implements parts of the algorithm described in 
+ * ICE sect 8.1.2. "Updating States" (ID-19): if for any 
  * component, all checks have been completed and have
  * failed, mark that component's state to NICE_CHECK_FAILED.
  *
@@ -1415,7 +1415,7 @@ static gboolean priv_update_selected_pair (NiceAgent *agent, NiceComponent *comp
 static void priv_update_check_list_failed_components (NiceAgent *agent, NiceStream *stream)
 {
   GSList *i;
-  /* note: emitting a signal might cause the client
+  /* note: emitting a signal might cause the client 
    *       to remove the stream, thus the component count
    *       must be fetched before entering the loop*/
   guint c, components = stream->n_components;
@@ -1449,12 +1449,12 @@ static void priv_update_check_list_failed_components (NiceAgent *agent, NiceStre
 	  break;
       }
     }
-
+ 
     /* note: all checks have failed
      * Set the component to FAILED only if it actually had remote candidates
      * that failed.. */
     if (i == NULL && comp != NULL && comp->remote_candidates != NULL)
-      agent_signal_component_state_change (agent,
+      agent_signal_component_state_change (agent, 
 					   stream->id,
 					   (c + 1), /* component-id */
 					   NICE_COMPONENT_STATE_FAILED);
@@ -1464,10 +1464,10 @@ static void priv_update_check_list_failed_components (NiceAgent *agent, NiceStre
 /*
  * Updates the check list state for a stream component.
  *
- * Implements the algorithm described in ICE sect 8.1.2
- * "Updating States" (ID-19) as it applies to checks of
- * a certain component. If there are any nominated pairs,
- * ICE processing may be concluded, and component state is
+ * Implements the algorithm described in ICE sect 8.1.2 
+ * "Updating States" (ID-19) as it applies to checks of 
+ * a certain component. If there are any nominated pairs, 
+ * ICE processing may be concluded, and component state is 
  * changed to READY.
  *
  * Sends a component state changesignal via 'agent'.
@@ -1787,7 +1787,7 @@ int conn_check_add_for_local_candidate (NiceAgent *agent, guint stream_id, NiceC
 }
 
 /*
- * Frees the CandidateCheckPair structure pointer to
+ * Frees the CandidateCheckPair structure pointer to 
  * by 'user data'. Compatible with GDestroyNotify.
  */
 static void conn_check_free_item (gpointer data)
@@ -1823,7 +1823,7 @@ void conn_check_free (NiceAgent *agent)
 
 /*
  * Prunes the list of connectivity checks for items related
- * to stream 'stream_id'.
+ * to stream 'stream_id'. 
  *
  * @return TRUE on success, FALSE on a fatal error
  */
@@ -2247,9 +2247,9 @@ static guint priv_prune_pending_checks (NiceStream *stream, guint component_id)
 }
 
 /*
- * Schedules a triggered check after a successfully inbound
+ * Schedules a triggered check after a successfully inbound 
  * connectivity check. Implements ICE sect 7.2.1.4 "Triggered Checks" (ID-19).
- *
+ * 
  * @param agent self pointer
  * @param component the check is related to
  * @param local_socket socket from which the inbound check was received
@@ -2276,7 +2276,7 @@ static gboolean priv_schedule_triggered_check (NiceAgent *agent, NiceStream *str
          * was FAILED when a peer-reflexive pair was created */
 
 	nice_debug ("Agent %p : Found a matching pair %p for triggered check.", agent, p);
-
+	
 	if (p->state == NICE_CHECK_WAITING ||
 	    p->state == NICE_CHECK_FROZEN)
           priv_add_pair_to_triggered_check_queue (agent, p);
@@ -2297,7 +2297,7 @@ static gboolean priv_schedule_triggered_check (NiceAgent *agent, NiceStream *str
 	}
 	else if (p->state == NICE_CHECK_SUCCEEDED ||
 		 p->state == NICE_CHECK_DISCOVERED) {
-	  nice_debug ("Agent %p : Skipping triggered check, already completed..", agent);
+	  nice_debug ("Agent %p : Skipping triggered check, already completed..", agent); 
 	  /* note: this is a bit unsure corner-case -- let's do the
 	     same state update as for processing responses to our own checks */
           /* note: this update is required by the dribble test, to
@@ -2358,7 +2358,7 @@ static gboolean priv_schedule_triggered_check (NiceAgent *agent, NiceStream *str
 
 
 /*
- * Sends a reply to an successfully received STUN connectivity
+ * Sends a reply to an successfully received STUN connectivity 
  * check request. Implements parts of the ICE spec section 7.2 (STUN
  * Server Procedures).
  *
@@ -2372,7 +2372,7 @@ static gboolean priv_schedule_triggered_check (NiceAgent *agent, NiceStream *str
  * @param rbuf_len length of STUN message to send
  * @param rbuf buffer containing the STUN message to send
  * @param use_candidate whether the request had USE_CANDIDATE attribute
- *
+ * 
  * @pre (rcand == NULL || nice_address_equal(rcand->addr, toaddr) == TRUE)
  */
 static void priv_reply_to_conn_check (NiceAgent *agent, NiceStream *stream, NiceComponent *component, NiceCandidate *lcand, NiceCandidate *rcand, const NiceAddress *toaddr, NiceSocket *sockptr, size_t  rbuf_len, uint8_t *rbuf, gboolean use_candidate)
@@ -2418,7 +2418,7 @@ static int priv_store_pending_check (NiceAgent *agent, NiceComponent *component,
   nice_debug ("Agent %p : Storing pending check.", agent);
 
   if (component->incoming_checks &&
-      g_slist_length (component->incoming_checks) >=
+      g_slist_length (component->incoming_checks) >= 
       NICE_AGENT_MAX_REMOTE_CANDIDATES) {
     nice_debug ("Agent %p : WARN: unable to store information for early incoming check.", agent);
     return -1;
@@ -2439,7 +2439,7 @@ static int priv_store_pending_check (NiceAgent *agent, NiceComponent *component,
 }
 
 /*
- * Adds a new pair, discovered from an incoming STUN response, to
+ * Adds a new pair, discovered from an incoming STUN response, to 
  * the connectivity check list.
  *
  * @return created pair, or NULL on fatal (memory allocation) errors
@@ -2520,12 +2520,12 @@ static void priv_check_for_role_conflict (NiceAgent *agent, gboolean control)
      * is needed */
     priv_recalculate_pair_priorities (agent);
   }
-  else
+  else 
     nice_debug ("Agent %p : Role conflict, agent role already changed to %d.", agent, control);
 }
 
 /*
- * Checks whether the mapped address in connectivity check response
+ * Checks whether the mapped address in connectivity check response 
  * matches any of the known local candidates. If not, apply the
  * mechanism for "Discovering Peer Reflexive Candidates" ICE ID-19)
  *
@@ -2880,7 +2880,7 @@ priv_add_new_turn_refresh (CandidateDiscovery *cdisco, NiceCandidate *relay_cand
 /*
  * Tries to match STUN reply in 'buf' to an existing STUN discovery
  * transaction. If found, a reply is sent.
- *
+ * 
  * @return TRUE if a matching transaction is found
  */
 static gboolean priv_map_reply_to_relay_request (NiceAgent *agent, StunMessage *resp)
@@ -2911,10 +2911,9 @@ static gboolean priv_map_reply_to_relay_request (NiceAgent *agent, StunMessage *
   StunTransactionId discovery_id;
   StunTransactionId response_id;
   stun_message_id (resp, response_id);
-  CandidateDiscovery *d = NULL;
 
   for (i = agent->discovery_list; i && trans_found != TRUE; i = i->next) {
-    d = i->data;
+    CandidateDiscovery *d = i->data;
 
     if (d->type == NICE_CANDIDATE_TYPE_RELAYED &&
         d->stun_message.buffer) {
@@ -3046,7 +3045,6 @@ static gboolean priv_map_reply_to_relay_request (NiceAgent *agent, StunMessage *
           uint16_t sent_realm_len = 0;
           uint16_t recv_realm_len = 0;
 
-          trans_found = TRUE;
           sent_realm = (uint8_t *) stun_message_find (&d->stun_message,
               STUN_ATTRIBUTE_REALM, &sent_realm_len);
           recv_realm = (uint8_t *) stun_message_find (resp,
@@ -3058,31 +3056,14 @@ static gboolean priv_map_reply_to_relay_request (NiceAgent *agent, StunMessage *
                agent->compatibility == NICE_COMPATIBILITY_OC2007R2) &&
               stun_message_get_class (resp) == STUN_ERROR &&
               stun_message_find_error (resp, &code) ==
-              STUN_MESSAGE_RETURN_SUCCESS) {
-            if (code == 437 ||
-                code == 438 ||
+              STUN_MESSAGE_RETURN_SUCCESS &&
+              recv_realm != NULL && recv_realm_len > 0) {
+
+            if (code == 438 ||
                 (code == 401 &&
                     !(recv_realm_len == sent_realm_len &&
-                        recv_realm != NULL && sent_realm != NULL &&
+                        sent_realm != NULL &&
                         memcmp (sent_realm, recv_realm, sent_realm_len) == 0))) {
-              if (code == 437) {
-                if (d->turn_retries++ == 3)
-                  goto error;
-
-                /* retry up to three times on Allocation Mismatch errors */
-                NiceAddress addr = d->nicesock->addr;
-                NiceSocket *new_socket;
-
-                /* FIXME: this ignores nice_agent_set_port_range */
-                nice_address_set_port (&addr, 0);
-
-                new_socket = nice_udp_bsd_socket_new (&addr);
-                if (new_socket) {
-                  _priv_set_socket_tos (agent, new_socket, d->stream->tos);
-                  nice_component_attach_socket (d->component, new_socket);
-                  d->nicesock = new_socket;
-                }
-              }
               d->stun_resp_msg = *resp;
               memcpy (d->stun_resp_buffer, resp->buffer,
                   stun_message_length (resp));
@@ -3091,11 +3072,15 @@ static gboolean priv_map_reply_to_relay_request (NiceAgent *agent, StunMessage *
               d->pending = FALSE;
             } else {
               /* case: a real unauthorized error */
-              goto error;
+              d->stun_message.buffer = NULL;
+              d->stun_message.buffer_len = 0;
+              d->done = TRUE;
             }
           } else {
             /* case: STUN error, the check STUN context was freed */
-             goto error;
+            d->stun_message.buffer = NULL;
+            d->stun_message.buffer_len = 0;
+            d->done = TRUE;
           }
           trans_found = TRUE;
         }
@@ -3104,20 +3089,13 @@ static gboolean priv_map_reply_to_relay_request (NiceAgent *agent, StunMessage *
   }
 
   return trans_found;
-
-error:
-  d->stun_message.buffer = NULL;
-  d->stun_message.buffer_len = 0;
-  d->done = TRUE;
-
-  return trans_found;
 }
 
 
 /*
  * Tries to match STUN reply in 'buf' to an existing STUN discovery
  * transaction. If found, a reply is sent.
- *
+ * 
  * @return TRUE if a matching transaction is found
  */
 static gboolean priv_map_reply_to_relay_refresh (NiceAgent *agent, StunMessage *resp)
